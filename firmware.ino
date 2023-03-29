@@ -1,3 +1,11 @@
+/* Olin College/Brandeis Rosbash Lab FlyBox Scope Project Firmware
+
+This code here is inteanded to be uploaded onto a FlyBox. Learn more 
+about this code and how it functions at https://github.com/ctallum/FlyBox
+
+Author: Chris Allum 2023
+*/
+
 #include "firmware.h"
 
 // set up some global variables for hardware

@@ -96,7 +96,7 @@ char* selectFiles(fs::FS& fs, ESP32Encoder encoder) {
     if (disp == numFiles - 2 && numFiles != 2) {
       disp = numFiles - 3;
     }
-    writeLCD("-", 0, indicator);
+    writeLCD(">", 0, indicator);
     for (int idx = 0; idx < 4; idx ++){
       if (disp + idx > numFiles){
         break;

@@ -1,4 +1,5 @@
-/* Olin College/Brandeis Rosbash Lab FlyBox Scope Project Firmware
+/* 
+Olin College/Brandeis Rosbash Lab FlyBox Scope Project Firmware
 
 This code here is inteanded to be uploaded onto a FlyBox. Learn more 
 about this code and how it functions at https://github.com/ctallum/FlyBox

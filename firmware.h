@@ -41,9 +41,9 @@
 #define MIN_PIN 14
 
 // Internal PWM Registers
-const int PWM_WHITE = 0;
-const int PWM_RED = 1;
-const int PWM_GREEN = 2;
+const int PWM_RED = 0;
+const int PWM_GREEN = 1;
+const int PWM_WHITE = 2;
 
 // Shared time constants
 const int PWM_FREQ = 5000;

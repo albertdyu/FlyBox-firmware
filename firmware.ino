@@ -71,6 +71,7 @@ void loop() {
 
   updateCurrentTime(currentFlyTime);
   int currentDay = currentFlyTime->day;
+  Serial.println(daysElapsed);
 
   // add to elapsed time
   if (currentDay != previousDay){

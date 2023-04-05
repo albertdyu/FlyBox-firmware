@@ -51,7 +51,6 @@ void updateStatusPercentAndTime(int currentMinute, int startMinute, int endMinut
   if (percent < 0){
     percent = 0;
   }
-  Serial.println(percent);
   writeLCDInt( percent, 8, 0);
 
   if (percent < 10){

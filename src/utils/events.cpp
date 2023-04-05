@@ -134,8 +134,8 @@ void checkToRunEvent(Event* event, Time* now, int daysElapsed){
   Time * stop = event->stop;
 
   int totalMinutesElapsed = daysElapsed * 1440 + currentHour * 60 + currentMinute;
-  int eventStartMinute = start->day * 1400 + start->hour * 60 + start->min;
-  int eventEndMinute = stop->day * 1400 + stop->hour * 60 + stop->min;
+  int eventStartMinute = start->day * 1440 + start->hour * 60 + start->min;
+  int eventEndMinute = stop->day * 1440 + stop->hour * 60 + stop->min;
 
   if (totalMinutesElapsed >= eventStartMinute && totalMinutesElapsed < eventEndMinute){
     event->isActive = true;
@@ -167,7 +167,6 @@ void runEvent(PinStatus *Pins[3], Event* event){
   int device = event->device;
   int frequency = event->frequency;
   int intensity = event->intensity;
-  bool sunset = event->sunset; 
   int pin = Pins[device]->pinNumber;
   bool pinIsON = Pins[device]->isCurrentlyOn;
   
@@ -179,7 +178,6 @@ void runEvent(PinStatus *Pins[3], Event* event){
     return;
   } 
   else{
-    Serial.println(pin);
     Serial.println(Pins[device]->pinNumber);
     unsigned long currentTimeMillis = millis();
     int duration = 500/frequency;

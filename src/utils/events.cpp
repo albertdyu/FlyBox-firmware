@@ -87,11 +87,11 @@ EventList* decodeJSONFile(const char* filename) {
       
       unsigned int startDay = doc["start_day"];
       unsigned int startHour = doc["start_hour"];
-      unsigned int startMinute = doc["startMinute"];
+      unsigned int startMinute = doc["start_min"];
 
       unsigned int endDay = doc["end_day"];
       unsigned int endHour = doc["end_hour"];
-      unsigned int endMinute = doc["endMinute"];
+      unsigned int endMinute = doc["end_min"];
       int intensity = doc["intensity"];
       int frequency = doc["frequency"];
       bool sunset = (doc["sunset"] == "true");
@@ -178,7 +178,6 @@ void runEvent(PinStatus *Pins[3], Event* event){
     return;
   } 
   else{
-    Serial.println(Pins[device]->pinNumber);
     unsigned long currentTimeMillis = millis();
     int duration = 500/frequency;
     if (currentTimeMillis - Pins[device]->lastTimeOn >= duration){

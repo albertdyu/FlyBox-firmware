@@ -1,8 +1,8 @@
 #ifndef buttons_h
 #define buttons_h
 
-void initButtons(ESP32Encoder *encoder);
-long getRotaryInfo(ESP32Encoder *encoder);
+void initButtons();
+long getRotaryInfo();
 bool knobIsPressed();
 bool hourButtonIsPressed();
 bool minuteButtonIsPressed();

@@ -13,7 +13,7 @@ void updateCurrentTime(Time* previousFlyBoxTime);
 RTC_DS3231 initRTC(RTC_DS3231 rtc);
 void addGlobalMinuteOffset();
 void addGlobalHourOffset();
-void dispTime(Time* time);
+void dispTime(Time* time, int x, int y);
 
 
 #endif

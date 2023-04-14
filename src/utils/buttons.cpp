@@ -1,13 +1,15 @@
 #include "../../firmware.h"
 
+extern ESP32Encoder encoder;
+
 /**
  * @brief Initialize the buttons on the box
  * 
  * @param encoder ESP32Encoder chip
  */
-void initButtons(ESP32Encoder *encoder){
-  encoder->attachHalfQuad(DT, CLK);
-  encoder->setCount(0);
+void initButtons(){
+  encoder.attachHalfQuad(DT, CLK);
+  encoder.setCount(0);
   pinMode(SW, INPUT_PULLUP);
   pinMode(HOUR_PIN, INPUT_PULLUP);
   pinMode(MIN_PIN, INPUT_PULLUP);
@@ -19,8 +21,8 @@ void initButtons(ESP32Encoder *encoder){
  * @param encoder 
  * @return long value, as knob is turned, the return value increases/decreases
  */
-long getRotaryInfo(ESP32Encoder *encoder) {
-  return encoder->getCount();
+long getRotaryInfo() {
+  return encoder.getCount();
 }
 
 /**

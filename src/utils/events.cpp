@@ -152,6 +152,7 @@ void checkToRunEvent(Event* event, Time* now, int daysElapsed){
  */
 void killEvent(PinStatus* Pins[3], int device){
   int pin = Pins[device]->pinNumber;
+  Serial.println("HERE");
   ledcWrite(pin, 0);
   Pins[device]->isCurrentlyOn = false;
 }
@@ -172,6 +173,21 @@ void runEvent(PinStatus *Pins[3], Event* event){
   
   int pwmIntensity = (pow(intensity, 3) / 1000000)* MAX_DUTY_CYCLE;
 
+  Serial.println("Running event:");
+  Serial.print("  Device: ");
+  Serial.println(device);
+  Serial.print("  Pin: ");
+  Serial.println(pin);
+  Serial.print("  Frequency: ");
+  Serial.println(frequency);
+  Serial.print("  Light status:");
+  if (Pins[device]->isCurrentlyOn){
+    Serial.println("On");
+  } else {
+     Serial.println("Off");
+  }
+  
+
   if (frequency == 0){
     ledcWrite(pin, pwmIntensity);
     Pins[device]->isCurrentlyOn = true;
@@ -183,6 +199,7 @@ void runEvent(PinStatus *Pins[3], Event* event){
     if (currentTimeMillis - Pins[device]->lastTimeOn >= duration){
       Pins[device]->lastTimeOn = currentTimeMillis;
       if (pinIsON){
+        Serial.println("HERE");
         ledcWrite(pin, 0);
         Pins[device]->isCurrentlyOn = false;
       } else{

@@ -23,7 +23,9 @@
 #include "src/utils/events.h"
 #include "src/screens/intro.h"
 #include "src/screens/status.h"
-#include "src/screens/select.h"
+#include "src/screens/file_select.h"
+#include "src/screens/start_menu.h"
+#include "src/screens/time_change.h"
 
 // Lights Pins
 #define RED_PIN 25

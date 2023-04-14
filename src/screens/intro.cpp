@@ -9,25 +9,9 @@
 void printIntro(Time* time){
     writeLCD("FLYBOX",0,0);
     writeLCD("Click knob to start", 0, 2);
-    bool minuteButtonActivlyPressed = minuteButtonIsPressed();
-    bool hourButtonActivlyPressed = hourButtonIsPressed();
     for(;;){
       updateCurrentTime(time);
-      dispTime(time);
-      if (minuteButtonIsPressed() && (minuteButtonActivlyPressed == false)){
-        addGlobalMinuteOffset();
-        minuteButtonActivlyPressed = true;
-      }
-      if (!minuteButtonIsPressed() && (minuteButtonActivlyPressed == true)){
-        minuteButtonActivlyPressed = false;
-      }
-      if (hourButtonIsPressed() && (hourButtonActivlyPressed == false)){
-        addGlobalHourOffset();
-        hourButtonActivlyPressed = true;
-      }
-      if (!hourButtonIsPressed() && (hourButtonActivlyPressed == true)){
-        hourButtonActivlyPressed = false;
-      }
+      dispTime(time, 15, 0);
       if (knobIsPressed()){
         clearLCD();
         updateCurrentTime(time);

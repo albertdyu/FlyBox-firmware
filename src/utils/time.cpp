@@ -59,7 +59,12 @@ RTC_DS3231 initRTC(RTC_DS3231 rtc){
  * @brief Permanantly add a minute to the internal RTC chip
  */
 void addGlobalMinuteOffset(){
-  rtc.adjust(DateTime(rtc.now().unixtime() + 60));
+  if (rtc.now().minute() == 59){
+    rtc.adjust(DateTime(rtc.now().unixtime() - 59* 60));
+  } else {
+    rtc.adjust(DateTime(rtc.now().unixtime() + 60));
+  }
+  
 }
 
 /**
@@ -73,19 +78,19 @@ void addGlobalHourOffset(){
  * @brief Display the current time on the box LCD screen
  * @param time a Time object
  */
-void dispTime(Time* time){
+void dispTime(Time* time, int x, int y){
   if (time->hour<10){
-    writeLCDInt( 0, 15, 0);
-    writeLCDInt( time->hour, 16, 0);
+    writeLCDInt( 0, x, y);
+    writeLCDInt( time->hour, x+1, y);
   } else {
-    writeLCDInt( time->hour, 15, 0);
+    writeLCDInt( time->hour, x, y);
   }
-  writeLCD(":",17,0);
+  writeLCD(":",x+2,y);
   if (time->min < 10){
-    writeLCDInt( 0, 18, 0);
-    writeLCDInt( time->min, 19, 0);
+    writeLCDInt( 0, x+3, y);
+    writeLCDInt( time->min, x+4, y);
   } else {
-    writeLCDInt( time->min, 18, 0);
+    writeLCDInt( time->min, x+3, y);
   }
 }
 

@@ -61,5 +61,5 @@ void updateStatusPercentAndTime(int currentMinute, int startMinute, int endMinut
     writeLCD("%", 11, 0);
   }
 
-  dispTime(currnetTime);
+  dispTime(currnetTime, 15, 0);
 }

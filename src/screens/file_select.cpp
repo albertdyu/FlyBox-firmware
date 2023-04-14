@@ -8,7 +8,7 @@
  * @param encoder ESP32Encoder 
  * @return char* A character array containing the name of the test file
  */
-char* selectFiles(fs::FS& fs, ESP32Encoder encoder) {
+char* selectFiles(fs::FS& fs) {
   int indicator = 0;
   int select = 0;
   int disp = 0;
@@ -57,9 +57,9 @@ char* selectFiles(fs::FS& fs, ESP32Encoder encoder) {
     for (; ;){
     }
   }  
-  long originalPosition = getRotaryInfo(&encoder);
+  long originalPosition = getRotaryInfo();
   for (;;) {
-    long newPosition = getRotaryInfo(&encoder);
+    long newPosition = getRotaryInfo();
     bool up = (newPosition < originalPosition);
     bool down = (newPosition > originalPosition);
     originalPosition = newPosition;

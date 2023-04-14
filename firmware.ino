@@ -35,7 +35,7 @@ void setup() {
 
   // Initialize lights, buttons, LCD, and RTC chip
   initLights();
-  initButtons(&encoder);
+  initButtons();
   lcd = initLCD(lcd);
   rtc = initRTC(rtc);
 
@@ -44,6 +44,9 @@ void setup() {
   
   // show intro screen
   printIntro(currentFlyTime);
+  sleep(.5);
+
+  printStartMenu(currentFlyTime);
 
   previousDay = currentFlyTime->day;
 
@@ -51,7 +54,7 @@ void setup() {
   sleep(1);
 
   // get file name to decode (intro screen)
-  char* filename = selectFiles(SD, encoder);
+  char* filename = selectFiles(SD);
 
   // decode the file via json deserialization
   FlyBoxEvents = decodeJSONFile(filename);
@@ -117,7 +120,7 @@ void loop() {
     digitalWrite(IR_PIN, LOW);
     writeLCD("Finished!", 5,0);
     writeLCD("Press knob to",3,2);
-    writeLCD("restart",6, 3);
+    writeLCD("return to home",3, 3);
     for (;;){
       if (knobIsPressed()){
         reset();

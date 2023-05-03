@@ -1,7 +1,7 @@
 #include "../../firmware.h"
 
 extern RTC_DS3231 rtc;
-
+extern Time* currentFlyTime;
 
 /**
  * @brief Allocate memory for a struct that contains integer values for day, hour, and minute
@@ -34,12 +34,12 @@ Time* setTimeStruct(unsigned int day, unsigned int hour, unsigned int min){
  * @brief get current DateTime from RTC chip and then update current time
  * @param previousFlyBoxTime a Time struct
  */
-void updateCurrentTime(Time* previousFlyBoxTime){
+void updateCurrentTime(){
   DateTime now = rtc.now();
 
-  previousFlyBoxTime->day = now.day();
-  previousFlyBoxTime->hour = now.hour();
-  previousFlyBoxTime->min = now.minute();
+  currentFlyTime->day = now.day();
+  currentFlyTime->hour = now.hour();
+  currentFlyTime->min = now.minute();
 }
 
 /**
@@ -48,7 +48,7 @@ void updateCurrentTime(Time* previousFlyBoxTime){
  * @param rtc RTC object
  * @return RTC_DS3231 
  */
-RTC_DS3231 initRTC(RTC_DS3231 rtc){
+RTC_DS3231 initRTC(){
   if (! rtc.begin()) {
     Serial.println("Couldn't find RTC");
   }

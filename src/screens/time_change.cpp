@@ -10,7 +10,7 @@ void timeChange(Time* time){
     writeLCD("Press knob to save", 0, 3);
     for(;;){
         int enter = !digitalRead(SW);
-        updateCurrentTime(time);
+        updateCurrentTime();
         dispTime(time, 8, 0);
         if (minuteButtonIsPressed() && (minuteButtonActivlyPressed == false)){
             addGlobalMinuteOffset();

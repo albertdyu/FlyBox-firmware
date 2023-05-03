@@ -14,6 +14,7 @@ RTC_DS3231 rtc;
 ESP32Encoder encoder;
 LiquidCrystal_I2C lcd(0x27, 20, 4);
 
+
 EventList* FlyBoxEvents;
 
 // set up some global variables for timing stuff
@@ -36,22 +37,21 @@ void setup() {
   // Initialize lights, buttons, LCD, and RTC chip
   initLights();
   initButtons();
-  lcd = initLCD(lcd);
-  rtc = initRTC(rtc);
+  lcd = initLCD();
+  rtc = initRTC();
 
   // get current clock time
-  updateCurrentTime(currentFlyTime);
+  updateCurrentTime();
   
   // show intro screen
-  printIntro(currentFlyTime);
-  sleep(.5);
+  printIntro();
 
-  printStartMenu(currentFlyTime);
+  printStartMenu();
 
   previousDay = currentFlyTime->day;
 
   fs::FS SD = initSD();  
-  sleep(1);
+
 
   // get file name to decode (intro screen)
   char* filename = selectFiles(SD);
@@ -66,13 +66,13 @@ void setup() {
   finalEventEndMinute = getLastEventEnd(FlyBoxEvents);
 
   // start status screen
-  initStatus();
+  initStatus(filename);
 }
 
 void loop() {
   // get current time from RTC chip
 
-  updateCurrentTime(currentFlyTime);
+  updateCurrentTime();
   int currentDay = currentFlyTime->day;
 
   // add to elapsed time

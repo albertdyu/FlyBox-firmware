@@ -8,7 +8,7 @@ extern LiquidCrystal_I2C lcd;
  * @param lcd LiquidCrystal_I2C object
  * @return LiquidCrystal_I2C 
  */
-LiquidCrystal_I2C initLCD(LiquidCrystal_I2C lcd) {
+LiquidCrystal_I2C initLCD() {
   lcd.init();
   lcd.clear();
   lcd.backlight();  // Make sure backlight is on
@@ -53,4 +53,8 @@ void writeLCDInt(int i, int x, int y) {
  */
 void clearLCD(){
   lcd.clear();
+}
+
+void scrollText(){
+  lcd.command(0x18);
 }

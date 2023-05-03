@@ -9,8 +9,8 @@ typedef struct Time {
 
 Time* initTime();
 Time* setTimeStruct(unsigned int day, unsigned int hour, unsigned int min);
-void updateCurrentTime(Time* previousFlyBoxTime);
-RTC_DS3231 initRTC(RTC_DS3231 rtc);
+void updateCurrentTime();
+RTC_DS3231 initRTC();
 void addGlobalMinuteOffset();
 void addGlobalHourOffset();
 void dispTime(Time* time, int x, int y);

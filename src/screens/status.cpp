@@ -32,8 +32,13 @@ void updateStatusDisplay(Event* event, PinStatus* Pins[3]){
  * @brief Initialize the status screen with main words
  * 
  */
-void initStatus(){
-  writeLCD("Status", 0, 0);
+void initStatus(char* filename){
+  char displayName[30];
+  strncpy(displayName, filename, 15);
+  displayName[15] = '\0';
+  char* shortDisplayName = displayName + 1;
+
+  writeLCD(shortDisplayName, 0, 0);
   writeLCD("White:", 0, 3);
   writeLCD("Red:", 0, 1);
   writeLCD("Green:", 0, 2);
@@ -51,14 +56,14 @@ void updateStatusPercentAndTime(int currentMinute, int startMinute, int endMinut
   if (percent < 0){
     percent = 0;
   }
-  writeLCDInt( percent, 8, 0);
+  writeLCD("%",19,1);
 
   if (percent < 10){
-    writeLCD("%", 9, 0);
+    writeLCDInt(percent, 18, 1);
   } else if (percent < 100){
-    writeLCD("%", 10, 0);
+    writeLCDInt(percent, 17, 1);
   } else {
-    writeLCD("%", 11, 0);
+    writeLCDInt(percent, 16, 1);
   }
 
   dispTime(currnetTime, 15, 0);

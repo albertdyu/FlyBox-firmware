@@ -1,6 +1,5 @@
 #include "../../firmware.h"
 
-
 /**
  * @brief Display all of the files found on the SD card and allow the user to scroll between options
  * 
@@ -8,7 +7,7 @@
  * @param encoder ESP32Encoder 
  * @return char* A character array containing the name of the test file
  */
-char* selectFiles(fs::FS& fs) {
+char* selectFiles(fs::FS& SD) {
   int indicator = 0;
   int select = 0;
   int disp = 0;
@@ -16,7 +15,9 @@ char* selectFiles(fs::FS& fs) {
   // get list of files
   char* files[100];
 
-  File root = fs.open("/");
+  
+
+  File root = SD.open("/");
   if (!root) {
     Serial.println("Failed to open directory");
     clearLCD();
@@ -58,12 +59,17 @@ char* selectFiles(fs::FS& fs) {
     }
   }  
   long originalPosition = getRotaryInfo();
+  bool initPressed = true;
   for (;;) {
+    if (initPressed && !knobIsPressed()){
+      initPressed = false;
+    }
+
     long newPosition = getRotaryInfo();
     bool up = (newPosition < originalPosition);
     bool down = (newPosition > originalPosition);
     originalPosition = newPosition;
-    int enter = !digitalRead(SW);
+
     if (up) {
       clearLCD();
       indicator--;
@@ -103,7 +109,7 @@ char* selectFiles(fs::FS& fs) {
       }
       writeLCD(files[disp + idx], 2, idx);
     }
-    if (enter) {
+    if (knobIsPressed() && !initPressed) {
       clearLCD();
       char* filename = (char*)malloc((strlen(files[select]) + 1) * sizeof(char));
       strcpy(filename, "/");

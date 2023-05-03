@@ -1,13 +1,17 @@
 #include "../../firmware.h"
 
 extern LiquidCrystal_I2C lcd;
+extern Time* currentFlyTime;
 
-void printStartMenu(Time* time){
+void printStartMenu(){
+    
     int select = 0;
     int IRState = -1;
     long originalPosition = getRotaryInfo();
     bool enterPressed = 0;
+    bool initialPress = true;
     for (;;) {
+        
         writeLCD("Select Test      >", 2, 0);
         if (IRState == -1){
             writeLCD("Toggle IR - off", 2, 1);
@@ -21,7 +25,10 @@ void printStartMenu(Time* time){
         bool up = (newPosition < originalPosition);
         bool down = (newPosition > originalPosition);
         originalPosition = newPosition;
-        int enter = !digitalRead(SW);
+
+        if (initialPress && !knobIsPressed()){
+            initialPress = false;
+        }
     
         if (down){
             clearLCD();
@@ -39,20 +46,20 @@ void printStartMenu(Time* time){
         }
         writeLCD(">", 0, select);
 
-        if (select == 1 && enterPressed == 0 && enter){
+        if (select == 1 && enterPressed == 0 && knobIsPressed()){
             IRState *= -1;
             enterPressed = 1;
         }
-        if (!enter && enterPressed){
+        if (!knobIsPressed() && enterPressed){
             enterPressed = 0;
         }
     
-        if (select == 2 && enter){
-            timeChange(time);
+        if (select == 2 && knobIsPressed()){
+            timeChange(currentFlyTime);
         }
 
 
-        if (select == 0 && enter) {
+        if (select == 0 && knobIsPressed() && !initialPress) {
             clearLCD();
             digitalWrite(IR_PIN, LOW);
             return;

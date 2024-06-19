@@ -15,8 +15,8 @@ void initLights(){
   ledcAttach(WHITE_PIN, PWM_FREQ, PWM_RESOLUTION);
 
   sleep(1);
-  ledcWrite(PWM_RED, 0);
-  ledcWrite(PWM_GREEN, 0);
-  ledcWrite(PWM_WHITE, 0);
+  ledcWrite(RED_PIN, 0);
+  ledcWrite(GREEN_PIN, 0);
+  ledcWrite(WHITE_PIN, 0);
   digitalWrite(IR_PIN, LOW);
 }

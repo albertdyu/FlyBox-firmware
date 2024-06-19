@@ -26,9 +26,9 @@ int firstEventStartMinute;
 Time* currentFlyTime = initTime();
 
 // make a dict sort of object so I can use json number to get pin
-PinStatus* Pins[3] = {initPinStatus(PWM_RED), 
-                      initPinStatus(PWM_GREEN), 
-                      initPinStatus(PWM_WHITE)};
+PinStatus* Pins[3] = {initPinStatus(RED_PIN), 
+                      initPinStatus(GREEN_PIN), 
+                      initPinStatus(WHITE_PIN)};
 
 // used to determine if a section of lights are running an event
 void setup() {

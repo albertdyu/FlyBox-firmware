@@ -11,8 +11,11 @@
 #include <LiquidCrystal_I2C.h>
 #include <Wire.h>
 #include <ESP32Encoder.h>
+#include <Adafruit_Sensor.h>
+#include <Adafruit_TSL2591.h>
 
 // Internal Helper Files
+#include "src/utils/calibration.h"
 #include "src/utils/lights.h"
 #include "src/utils/kill.h"
 #include "src/utils/time.h"
@@ -26,6 +29,7 @@
 #include "src/screens/file_select.h"
 #include "src/screens/start_menu.h"
 #include "src/screens/time_change.h"
+
 
 // Lights Pins
 #define RED_PIN 25
@@ -46,5 +50,7 @@
 const int PWM_FREQ = 5000;
 const int PWM_RESOLUTION = 10;
 const int MAX_DUTY_CYCLE = (int)(pow(2, PWM_RESOLUTION) - 1);
+
+extern Adafruit_TSL2591 tsl;
 
 #endif

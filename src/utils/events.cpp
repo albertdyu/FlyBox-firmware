@@ -68,54 +68,60 @@ void addEvent(EventList* eventList, Event* newEvent) {
  * @param filename char array of the desired text file 
  * @return EventList* A linked list of events that contains all of the inerperted JSON data
  */
+
+int desiredLux = 0;  // Global variable to store the desired lux for the white light
+
 EventList* decodeJSONFile(const char* filename) {
-  EventList* FlyBoxEvents = newEventList();
-  StaticJsonDocument<512> doc;
+    EventList* FlyBoxEvents = newEventList();
+    StaticJsonDocument<512> doc;
 
-  File myFile = SD.open(filename);
-  if (myFile) {
+    File myFile = SD.open(filename);
+    if (myFile) {
+        myFile.find("[");
+        do {
+            DeserializationError error = deserializeJson(doc, myFile);
+            if (error) {
+                Serial.print(F("deserializeJson() failed: "));
+                Serial.println(error.f_str());
+            }
 
-    myFile.find("[");
-    do {
-      DeserializationError error = deserializeJson(doc, myFile);
-      if (error) {
-        Serial.print(F("deserializeJson() failed: "));
-        Serial.println(error.f_str());
-      }
+            int device = doc["group"];
+            unsigned int startDay = doc["start_day"];
+            unsigned int startHour = doc["start_hour"];
+            unsigned int startMinute = doc["start_min"];
 
-      int device = doc["group"];
-      
-      unsigned int startDay = doc["start_day"];
-      unsigned int startHour = doc["start_hour"];
-      unsigned int startMinute = doc["start_min"];
+            unsigned int endDay = doc["end_day"];
+            unsigned int endHour = doc["end_hour"];
+            unsigned int endMinute = doc["end_min"];
+            int intensity = doc["intensity"];
+            int frequency = doc["frequency"];
+            bool sunset = (doc["sunset"] == "true");
 
-      unsigned int endDay = doc["end_day"];
-      unsigned int endHour = doc["end_hour"];
-      unsigned int endMinute = doc["end_min"];
-      int intensity = doc["intensity"];
-      int frequency = doc["frequency"];
-      bool sunset = (doc["sunset"] == "true");
+            Time* timeStart = setTimeStruct(startDay, startHour, startMinute);
+            Time* timeStop = setTimeStruct(endDay, endHour, endMinute);
 
-      Time* timeStart = setTimeStruct(startDay, startHour, startMinute);
-      Time* timeStop = setTimeStruct(endDay, endHour, endMinute);
+            Event* event = newEvent(device, frequency, intensity, sunset, timeStart, timeStop);
+            addEvent(FlyBoxEvents, event);
 
-      Event* event = newEvent(device, frequency, intensity, sunset, timeStart, timeStop);
-      addEvent(FlyBoxEvents, event);
+            // Check if the group is 2 (white light) and store the desired lux
+            if (device == 2) {
+                desiredLux = intensity;  // Assuming the intensity value represents the desired lux
+            }
 
-    } while (myFile.findUntil(",", "]"));
-  } else {
-    clearLCD();
-    digitalWrite(IR_PIN, LOW);
-    writeLCD("Error: No file found", 0,0);
-    writeLCD("Press knob to",3,2);
-    writeLCD("restart",6, 3);
-    for (;;){
-      if (knobIsPressed()){
-        reset();
-      }
+        } while (myFile.findUntil(",", "]"));
+    } else {
+        clearLCD();
+        digitalWrite(IR_PIN, LOW);
+        writeLCD("Error: No file found", 0, 0);
+        writeLCD("Press knob to", 3, 2);
+        writeLCD("restart", 6, 3);
+        for (;;) {
+            if (knobIsPressed()) {
+                reset();
+            }
+        }
     }
-  }
-  return FlyBoxEvents;
+    return FlyBoxEvents;
 }
 
 /**
@@ -164,45 +170,28 @@ void killEvent(PinStatus* Pins[3], int device){
  * @param Pins A PinStatus object that contains all the info on the pins
  * @param event An Event* object that contains information on the current event to run
  */
-void runEvent(PinStatus *Pins[3], Event* event){
+void runEvent(PinStatus *Pins[3], Event* event) {
   int device = event->device;
   int frequency = event->frequency;
-  int intensity = event->intensity;
+  int intensity = (device == 2) ? calibratedIntensity : event->intensity;  // Use calibrated intensity for white light
   int pin = Pins[device]->pinNumber;
   bool pinIsON = Pins[device]->isCurrentlyOn;
-  
-  int pwmIntensity = (pow(intensity, 3) / 1000000)* MAX_DUTY_CYCLE;
+  int pwmIntensity = (intensity * MAX_DUTY_CYCLE) / 400;  // Correct PWM calculation
 
-  Serial.println("Running event:");
-  Serial.print("  Device: ");
-  Serial.println(device);
-  Serial.print("  Pin: ");
-  Serial.println(pin);
-  Serial.print("  Frequency: ");
-  Serial.println(frequency);
-  Serial.print("  Light status:");
-  if (Pins[device]->isCurrentlyOn){
-    Serial.println("On");
-  } else {
-     Serial.println("Off");
-  }
-  
 
-  if (frequency == 0){
+  if (frequency == 0) {
     ledcWrite(pin, pwmIntensity);
     Pins[device]->isCurrentlyOn = true;
     return;
-  } 
-  else{
+  } else {
     unsigned long currentTimeMillis = millis();
-    int duration = 500/frequency;
-    if (currentTimeMillis - Pins[device]->lastTimeOn >= duration){
+    int duration = 500 / frequency;
+    if (currentTimeMillis - Pins[device]->lastTimeOn >= duration) {
       Pins[device]->lastTimeOn = currentTimeMillis;
-      if (pinIsON){
-        Serial.println("HERE");
+      if (pinIsON) {
         ledcWrite(pin, 0);
         Pins[device]->isCurrentlyOn = false;
-      } else{
+      } else {
         Pins[device]->isCurrentlyOn = true;
         ledcWrite(pin, pwmIntensity);
       }

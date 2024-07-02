@@ -22,6 +22,8 @@ int previousDay;
 unsigned int daysElapsed = 0;
 int finalEventEndMinute;
 int firstEventStartMinute;
+Adafruit_TSL2591 tsl = Adafruit_TSL2591(2591);
+
 
 Time* currentFlyTime = initTime();
 
@@ -33,6 +35,14 @@ PinStatus* Pins[3] = {initPinStatus(RED_PIN),
 // used to determine if a section of lights are running an event
 void setup() {
   Serial.begin(115200);
+
+  if (!tsl.begin()) {
+    Serial.println(F("No TSL2591 sensor found ... check your wiring?"));
+    while (1);
+  }
+  tsl.setGain(TSL2591_GAIN_LOW);  // 25x gain
+  tsl.setTiming(TSL2591_INTEGRATIONTIME_100MS);  // 100ms integration time
+  
 
   // Initialize lights, buttons, LCD, and RTC chip
   initLights();
@@ -60,10 +70,19 @@ void setup() {
   FlyBoxEvents = decodeJSONFile(filename);
 
   // Turn on IR light for whole flybox test run
-  digitalWrite(IR_PIN, HIGH);
+  digitalWrite(IR_PIN, LOW);
 
   firstEventStartMinute = getFirstEventStart(FlyBoxEvents);
   finalEventEndMinute = getLastEventEnd(FlyBoxEvents);
+
+  int result = calibrateWhiteLight();
+  if (result == -1) {
+    Serial.println(F("Calibration failed"));
+  } else {
+    Serial.print(F("Calibrated intensity: "));
+    Serial.println(result);
+  }
+  digitalWrite(IR_PIN, HIGH);
 
   // start status screen
   initStatus(filename);
@@ -117,7 +136,6 @@ void loop() {
   
   if (testIsDone){
     lcd.clear();
-    digitalWrite(IR_PIN, LOW);
     writeLCD("Finished!", 5,0);
     writeLCD("Press knob to",3,2);
     writeLCD("return to home",3, 3);
